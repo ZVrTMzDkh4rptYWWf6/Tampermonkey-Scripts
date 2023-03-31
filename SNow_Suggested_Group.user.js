@@ -1,6 +1,6 @@
 // ==UserScript==
-// @name         ServiceNow Recommended Group Button
-// @version      1.74
+// @name         ServiceNow Suggested Group Button
+// @version      1.741
 // @description  Create a button with the suggested group text and copy it to the assignment group field when clicked
 // @match        https://lvs1.service-now.com/incident*
 // @downloadURL  https://github.com/ZVrTMzDkh4rptYWWf6/Tampermonkey-Scripts/raw/main/SNow_Suggested_Group.user.js
@@ -18,52 +18,52 @@
         const checks = [
           {
             includes: ['VMware recommends not running on a snapshot for more than 24-72 hours', 'Zerto VPG '],
-            prior: '',
+            priortxt: '',
             group: 'Check Client ID and route to Client Support POD.\n or Windows Support in Remedy.'
           },
           {
             includes: 'LogicMonitor system has not received any data from Collector ',
-            prior: '',
+            priortxt: '',
             group: 'Collector Down Alert, Assign to appropriate POD'
           },
           {
             includes: ['noc-alerts-prod ERROR ', 'noc-escalations-prod ERROR ', 'noc-itsm-sync-prod ERROR ', 'noc-jobs-prod ERROR ', 'appconsole-errors-esb '],
-            prior: 'Recommended Group: ',
+            priortxt: 'Suggested Group: ',
             group: 'Enterprise Service Bus'
           },
           {
             includes: ['host_name:mits', 'VMware VM Snapshots-MITS-', 'description: MITS-'],
-            prior: 'Recommended Group: ',
+            priortxt: 'Suggested Group: ',
             group: 'NOC III'
           },
           {
             includes: 'lvs.igsteam:Cloud',
-            prior: 'Recommended Group: ',
+            priortxt: 'Suggested Group: ',
             group: 'Cloud Platform'
           },
           {
             includes: 'lvs.igsteam:SOC',
-            prior: 'Recommended Group: ',
+            priortxt: 'Suggested Group: ',
             group: 'Security Operations Center'
           },
           {
             includes: 'lvs.igsteam:Network',
-            prior: 'Recommended Group: ',
+            priortxt: 'Suggested Group: ',
             group: 'IGS POD NW',
             requires: ['IGS POD AB 1', 'IGS POD AB 2', 'IGS POD TO 1', 'IGS POD BC 2', 'LVSCALGARY']
           },
           {
             includes: 'LVSCALGARY\\',
-            prior: 'Recommended Group: ',
+            priortxt: 'Suggested Group: ',
             group: 'IGS POD AB 1'
           },
           {
             includes: 'lvs.pod:',
-            prior: 'Recommended Group: ',
+            priortxt: 'Suggested Group: ',
             group: ''
           }
         ];
-        let recommendedAssignmentGroupText = '';
+        let suggestedAssignmentGroupText = '';
         let isMatchFound = false; // Add this flag
 
         for (const check of checks) {
@@ -94,13 +94,13 @@
                     }
 
                     isMatchFound = true; // Set the flag to true when a match is found
-                    recommendedAssignmentGroupText = check.prior + '<b>' + check.group + '</b>';
+                    suggestedAssignmentGroupText = check.priortxt + '<b>' + check.group + '</b>';
 
                     if (check.includes === 'lvs.pod:') {
                         if (line.split('lvs.pod:')[1].trim() === '') {
-                            recommendedAssignmentGroupText += '<b>UNKNOWN</b>';
+                            suggestedAssignmentGroupText += '<b>UNKNOWN</b>';
                         } else {
-                            recommendedAssignmentGroupText += '<b>' + line.split('lvs.pod:')[1].trim() + '</b>';
+                            suggestedAssignmentGroupText += '<b>' + line.split('lvs.pod:')[1].trim() + '</b>';
                         }
                     }
                     break;
@@ -108,16 +108,16 @@
             }
         }
 
-        // Set the recommendedAssignmentGroupText to 'UNKNOWN' only if no match is found
+        // Set the suggestedAssignmentGroupText to 'UNKNOWN' only if no match is found
         if (!isMatchFound) {
-            recommendedAssignmentGroupText = 'Recommended Group: <b>UNKNOWN</b>';
+            suggestedAssignmentGroupText = 'Suggested Group: <b>UNKNOWN</b>';
         }
 
         const assignmentGroupInput = document.getElementById('sys_display.incident.assignment_group');
         const assignmentGroupDiv = assignmentGroupInput.closest('div');
-        const recommendedGroupDiv = document.createElement('div');
-        recommendedGroupDiv.innerHTML = recommendedAssignmentGroupText;
-        assignmentGroupDiv.parentNode.insertBefore(recommendedGroupDiv, assignmentGroupDiv);
+        const suggestedGroupDiv = document.createElement('div');
+        suggestedGroupDiv.innerHTML = suggestedAssignmentGroupText;
+        assignmentGroupDiv.parentNode.insertBefore(suggestedGroupDiv, assignmentGroupDiv);
 
     }, 250);
 })();
