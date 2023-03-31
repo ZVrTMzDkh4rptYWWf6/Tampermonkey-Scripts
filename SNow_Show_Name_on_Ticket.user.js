@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         ServiceNow Show Ticket Creator Email at top of Incident
-// @version      1.48
+// @version      1.485
 // @description  Show the Name of the ticket creator, extracted from the last e-mail address,at the top of the ticket information section.
 // @match        https://lvs1.service-now.com/incident*
 // @downloadURL  https://github.com/ZVrTMzDkh4rptYWWf6/Tampermonkey-Scripts/raw/main/SNow_Show_Name_on_Ticket.user.js
