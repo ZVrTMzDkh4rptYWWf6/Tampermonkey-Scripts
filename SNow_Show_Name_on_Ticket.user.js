@@ -25,28 +25,45 @@
             creatorEmailAddress = lastEmail.textContent.trim();
         }
 
+        var creatorNameDisplay = document.createElement('div');
+        var labelNumber = document.getElementById('label.incident.number');
+
         if (creatorEmailAddress && emailRegex.test(creatorEmailAddress)) {
             var firstLast = creatorEmailAddress.split('@')[0];
             var creatorFirstName = firstLast.split('.')[0].charAt(0).toUpperCase() + firstLast.split('.')[0].slice(1);
             var creatorLastName = firstLast.split('.')[1].charAt(0).toUpperCase() + firstLast.split('.')[1].slice(1);
-            var creatorNameDisplay = document.createElement('div');
             creatorNameDisplay.innerHTML = 'Ticket Created by: </br><b>' + creatorFirstName + ' ' + creatorLastName + '</b>';
-            var labelNumber = document.getElementById('label.incident.number');
             labelNumber.parentNode.insertBefore(creatorNameDisplay, labelNumber);
 
             // Update the page title
             var originalTitle = document.title;
-            document.title = creatorFirstName + ': ' + document.title;
+            document.title = creatorFirstName + ' - ' + originalTitle;
 
             // Remove the name from the title after 25 seconds
             setTimeout(function() {
                 document.title = originalTitle;
             }, 25000);
         } else {
-            var creatorEmailDisplay = document.createElement('div');
-            creatorEmailDisplay.innerHTML = 'Ticket may have been manually created, or no email found where expected';
-            var labelNumber = document.getElementById('label.incident.number');
-            labelNumber.parentNode.insertBefore(creatorEmailDisplay, labelNumber);
+            var inputElement = document.getElementById('incident.opened_by_label');
+            if (inputElement && inputElement.value) {
+                var fullName = inputElement.value.trim();
+                var nameParts = fullName.split(' ');
+                var firstName = nameParts[0];
+                creatorNameDisplay.innerHTML = 'Ticket Created by: </br><b>' + fullName + '</b>';
+                labelNumber.parentNode.insertBefore(creatorNameDisplay, labelNumber);
+
+                // Update the page title
+                var originalTitle = document.title;
+                document.title = firstName + ' - ' + originalTitle;
+
+                // Remove the name from the title after 25 seconds
+                setTimeout(function() {
+                    document.title = originalTitle;
+                }, 25000);
+            } else {
+                creatorNameDisplay.innerHTML = 'Ticket may have been manually created, or no name found where expected';
+                labelNumber.parentNode.insertBefore(creatorNameDisplay, labelNumber);
+            }
         }
     }, 1500);
 })();
