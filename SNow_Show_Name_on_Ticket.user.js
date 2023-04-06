@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         ServiceNow Show Ticket Creator Email at top of Incident
-// @version      1.485
+// @version      1.486
 // @description  Show the Name of the ticket creator, extracted from the last e-mail address,at the top of the ticket information section.
 // @match        https://lvs1.service-now.com/incident*
 // @downloadURL  https://github.com/ZVrTMzDkh4rptYWWf6/Tampermonkey-Scripts/raw/main/SNow_Show_Name_on_Ticket.user.js
@@ -44,25 +44,28 @@
                 document.title = originalTitle;
             }, 25000);
         } else {
-            var inputElement = document.getElementById('incident.opened_by_label');
+            var inputElement = document.getElementById('incident.sys_created_by');
             if (inputElement && inputElement.value) {
-                var fullName = inputElement.value.trim();
-                var nameParts = fullName.split(' ');
-                var firstName = nameParts[0];
-                creatorNameDisplay.innerHTML = 'Ticket Created by: </br><b>' + fullName + '</b>';
-                labelNumber.parentNode.insertBefore(creatorNameDisplay, labelNumber);
+                var creatorEmailAddress = inputElement.value.trim();
+                if (emailRegex.test(creatorEmailAddress)) {
+                    var firstLast = creatorEmailAddress.split('@')[0];
+                    var creatorFirstName = firstLast.split('.')[0].charAt(0).toUpperCase() + firstLast.split('.')[0].slice(1);
+                    var creatorLastName = firstLast.split('.')[1].charAt(0).toUpperCase() + firstLast.split('.')[1].slice(1);
+                    creatorNameDisplay.innerHTML = 'Ticket Created by: </br><b>' + creatorFirstName + ' ' + creatorLastName + '</b>';
+                    labelNumber.parentNode.insertBefore(creatorNameDisplay, labelNumber);
 
-                // Update the page title
-                var originalTitle = document.title;
-                document.title = firstName + ' - ' + originalTitle;
+                    // Update the page title
+                    var originalTitle = document.title;
+                    document.title = creatorFirstName + ' - ' + originalTitle;
 
-                // Remove the name from the title after 25 seconds
-                setTimeout(function() {
-                    document.title = originalTitle;
-                }, 25000);
-            } else {
-                creatorNameDisplay.innerHTML = 'Ticket may have been manually created, or no name found where expected';
-                labelNumber.parentNode.insertBefore(creatorNameDisplay, labelNumber);
+                    // Remove the name from the title after 25 seconds
+                    setTimeout(function() {
+                        document.title = originalTitle;
+                    }, 25000);
+                } else {
+                    creatorNameDisplay.innerHTML = 'Ticket may have been manually created, or no name found where expected';
+                    labelNumber.parentNode.insertBefore(creatorNameDisplay, labelNumber);
+                }
             }
         }
     }, 1500);
