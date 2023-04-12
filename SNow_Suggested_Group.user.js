@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         ServiceNow Suggested Group Button
-// @version      1.742
+// @version      1.743
 // @description  Create a button with the suggested group text and copy it to the assignment group field when clicked
 // @match        https://lvs1.service-now.com/incident*
 // @downloadURL  https://github.com/ZVrTMzDkh4rptYWWf6/Tampermonkey-Scripts/raw/main/SNow_Suggested_Group.user.js
@@ -27,7 +27,7 @@
             group: 'Enterprise Service Bus'
           },
           {
-            includesAny: ['host_name:mits', 'VMware VM Snapshots-MITS-', 'description: MITS-'],
+            includesAny: ['host_name:mits', 'VMware VM Snapshots-MITS-', 'description: MITS-', 'description: MITS_'],
             priortxt: 'Suggested Group: ',
             group: 'NOC III'
           },
