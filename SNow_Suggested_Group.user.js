@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         ServiceNow Suggested Group Button
-// @version      1.741
+// @version      1.742
 // @description  Create a button with the suggested group text and copy it to the assignment group field when clicked
 // @match        https://lvs1.service-now.com/incident*
 // @downloadURL  https://github.com/ZVrTMzDkh4rptYWWf6/Tampermonkey-Scripts/raw/main/SNow_Suggested_Group.user.js
@@ -17,9 +17,24 @@
         const lines = incidentDescription.textContent.split('\n');
         const checks = [
           {
-            includes: ['VMware recommends not running on a snapshot for more than 24-72 hours', 'Zerto VPG '],
+            includesAny: ['VMware recommends not running on a snapshot for more than 24-72 hours', 'Zerto VPG '],
             priortxt: '',
-            group: 'Check Client ID and route to Client Support POD.\n or Windows Support in Remedy.'
+            group: 'Check Client ID and route to Client Support POD\n or Windows Support in Remedy.'
+          },
+          {
+            includesAny: ['noc-alerts-prod ERROR ', 'noc-escalations-prod ERROR ', 'noc-itsm-sync-prod ERROR ', 'noc-jobs-prod ERROR ', 'appconsole-errors-esb '],
+            priortxt: 'Suggested Group: ',
+            group: 'Enterprise Service Bus'
+          },
+          {
+            includesAny: ['host_name:mits', 'VMware VM Snapshots-MITS-', 'description: MITS-'],
+            priortxt: 'Suggested Group: ',
+            group: 'NOC III'
+          },
+          {
+            includesAny: ['lvs.igsteam:SOC', 'lmcollector: LVSSOC\\SOC-YYC1-MON01P'],
+            priortxt: 'Suggested Group: ',
+            group: 'Security Operations Center'
           },
           {
             includes: 'LogicMonitor system has not received any data from Collector ',
@@ -27,24 +42,9 @@
             group: 'Collector Down Alert, Assign to appropriate POD'
           },
           {
-            includes: ['noc-alerts-prod ERROR ', 'noc-escalations-prod ERROR ', 'noc-itsm-sync-prod ERROR ', 'noc-jobs-prod ERROR ', 'appconsole-errors-esb '],
-            priortxt: 'Suggested Group: ',
-            group: 'Enterprise Service Bus'
-          },
-          {
-            includes: ['host_name:mits', 'VMware VM Snapshots-MITS-', 'description: MITS-'],
-            priortxt: 'Suggested Group: ',
-            group: 'NOC III'
-          },
-          {
             includes: 'lvs.igsteam:Cloud',
             priortxt: 'Suggested Group: ',
             group: 'Cloud Platform'
-          },
-          {
-            includes: 'lvs.igsteam:SOC',
-            priortxt: 'Suggested Group: ',
-            group: 'Security Operations Center'
           },
           {
             includes: 'lvs.igsteam:Network',
@@ -66,6 +66,7 @@
         let suggestedAssignmentGroupText = '';
         let isMatchFound = false; // Add this flag
 
+        outerLoop: // Add a label for the outer loop
         for (const check of checks) {
             let includesAll = true;
             if (check.requires) {
@@ -77,33 +78,39 @@
             }
             for (const line of lines) {
                 let found = false;
-                if (Array.isArray(check.includes)) {
-                    for (const includeItem of check.includes) {
+                let foundValue = '';
+
+                if (check.includes) {
+                    found = line.includes(check.includes);
+                    if (found) {
+                        foundValue = check.includes;
+                    }
+                } else if (check.includesAny) {
+                    for (const includeItem of check.includesAny) {
                         if (line.includes(includeItem)) {
                             found = true;
+                            foundValue = includeItem;
                             break;
                         }
                     }
-                } else {
-                    found = line.includes(check.includes);
                 }
 
                 if (found) {
-                    if (check.includes === 'lvs.pod:' && line.split('lvs.pod:')[1].trim() === '') {
+                    if (foundValue === 'lvs.pod:' && line.split('lvs.pod:')[1].trim() === '') {
                         continue; // Skip this line if 'lvs.pod:' is followed by an empty string
                     }
 
                     isMatchFound = true; // Set the flag to true when a match is found
                     suggestedAssignmentGroupText = check.priortxt + '<b>' + check.group + '</b>';
 
-                    if (check.includes === 'lvs.pod:') {
+                    if (foundValue === 'lvs.pod:') {
                         if (line.split('lvs.pod:')[1].trim() === '') {
                             suggestedAssignmentGroupText += '<b>UNKNOWN</b>';
                         } else {
                             suggestedAssignmentGroupText += '<b>' + line.split('lvs.pod:')[1].trim() + '</b>';
                         }
                     }
-                    break;
+                    break outerLoop; // Break out of the outer loop when a match is found
                 }
             }
         }
