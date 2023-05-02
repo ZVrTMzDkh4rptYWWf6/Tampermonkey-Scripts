@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         ServiceNow Suggested Group Button
-// @version      1.745
+// @version      1.746
 // @description  Create a button with the suggested group text and copy it to the assignment group field when clicked
 // @match        https://lvs1.service-now.com/incident*
 // @downloadURL  https://github.com/ZVrTMzDkh4rptYWWf6/Tampermonkey-Scripts/raw/main/SNow_Suggested_Group.user.js
@@ -38,6 +38,11 @@
             group: 'Security Operations Center'
           },
           {
+            includesAny: ['lvs.igsteam:Cloud', 'description: DS-System '],
+            priortxt: 'Suggested Group: ',
+            group: 'Cloud Platform'
+          },
+          {
             includes: 'lvs.igsteam:Network',
             priortxt: 'Suggested Group: ',
             group: 'IGS POD NW',
@@ -47,11 +52,6 @@
             includes: 'LogicMonitor system has not received any data from Collector ',
             priortxt: '',
             group: 'Collector Down Alert, Assign to appropriate POD'
-          },
-          {
-            includes: 'lvs.igsteam:Cloud',
-            priortxt: 'Suggested Group: ',
-            group: 'Cloud Platform'
           },
           {
             includes: 'LVSCALGARY\\',
