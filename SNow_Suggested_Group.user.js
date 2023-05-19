@@ -43,6 +43,11 @@
             group: 'Cloud Platform'
           },
           {
+            includesAny: ['lmcollector: FVOW10MGMT'],
+            priortxt: 'Suggested Group: ',
+            group: 'BC Hydro VOIP Support'
+          },
+          {
             includes: 'lvs.igsteam:Network',
             priortxt: 'Suggested Group: ',
             group: 'IGS POD NW',
