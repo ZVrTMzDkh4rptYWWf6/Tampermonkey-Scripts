@@ -43,7 +43,7 @@
             group: 'Cloud Platform'
           },
           {
-            includesAny: ['lmcollector: FVOW10MGMT'],
+            includesAny: ['FVOW10MGMT', 'BC Hydro' ],
             priortxt: 'Suggested Group: ',
             group: 'BC Hydro VOIP Support'
           },
