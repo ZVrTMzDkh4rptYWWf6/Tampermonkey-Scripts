@@ -59,7 +59,7 @@
             group: 'Collector Down Alert, Assign to appropriate POD'
           },
           {
-            includes: 'LVSCALGARY\\',
+            includesAny: ['LVSCALGARY\\', 'Long View Systems Internal Systems'],
             priortxt: 'Suggested Group: ',
             group: 'IGS POD AB 1'
           },
