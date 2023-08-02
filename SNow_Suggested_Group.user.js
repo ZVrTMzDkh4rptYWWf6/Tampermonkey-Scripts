@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         ServiceNow Suggested Group Button
-// @version      1.7481
+// @version      1.7482
 // @description  Create a button with the suggested group text and copy it to the assignment group field when clicked
 // @match        https://lvs1.service-now.com/incident*
 // @downloadURL  https://github.com/ZVrTMzDkh4rptYWWf6/Tampermonkey-Scripts/raw/main/SNow_Suggested_Group.user.js
@@ -23,7 +23,7 @@
             group: 'Check Client ID and route to Client Support POD\n or Windows Support in Remedy.'
           },
           {
-            includesAny: ['noc-alerts-prod ERROR ', 'noc-escalations-prod ERROR ', 'noc-itsm-sync-prod ERROR ', 'noc-jobs-prod ERROR ', 'appconsole-errors-esb ', 'noc-jobs-daily-prod', 'lvs1esb'],
+            includesAny: ['errors-logged-esb', 'noc-alerts-prod ERROR', 'noc-escalations-prod ERROR', 'noc-itsm-sync-prod', 'noc-jobs-prod ERROR', 'appconsole-errors-esb', 'noc-jobs-daily-prod', 'lvs1esb'],
             priortxt: 'Suggested Group: ',
             group: 'Enterprise Service Bus'
           },
