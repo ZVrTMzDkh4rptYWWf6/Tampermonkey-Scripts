@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         ServiceNow Suggested Group Button
-// @version      1.7485
+// @version      1.7486
 // @description  Create a button with the suggested group text and copy it to the assignment group field when clicked
 // @match        https://lvs1.service-now.com/incident*
 // @downloadURL  https://github.com/ZVrTMzDkh4rptYWWf6/Tampermonkey-Scripts/raw/main/SNow_Suggested_Group.user.js
@@ -43,11 +43,6 @@
             group: 'Cloud Platform'
           },
           {
-            includesAny: ['KEYERA' ],
-            priortxt: 'Suggested Group: ',
-            group: 'N/A - E-mail/Call Client and Resolve.'
-          },
-          {
             includesAny: ['FVOW10MGMT', 'BC Hydro' ],
             priortxt: 'Suggested Group: ',
             group: 'BC Hydro VOIP Support'
@@ -56,6 +51,11 @@
             includesAny: ['EPCOR' ],
             priortxt: 'Suggested Group: ',
             group: 'EPCOR Utilities Inc.'
+          },
+          {
+            includesAny: ['KEYERA' ],
+            priortxt: '',
+            group: 'E-mail/Call Client and Resolve.'
           },
           {
             includes: 'lvs.igsteam:Network',
