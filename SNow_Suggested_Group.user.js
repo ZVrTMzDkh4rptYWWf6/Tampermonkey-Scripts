@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         ServiceNow Suggested Group Button
-// @version      1.7484
+// @version      1.7485
 // @description  Create a button with the suggested group text and copy it to the assignment group field when clicked
 // @match        https://lvs1.service-now.com/incident*
 // @downloadURL  https://github.com/ZVrTMzDkh4rptYWWf6/Tampermonkey-Scripts/raw/main/SNow_Suggested_Group.user.js
@@ -41,6 +41,11 @@
             includesAny: ['lvs.igsteam:Cloud', 'description: DS-System '],
             priortxt: 'Suggested Group: ',
             group: 'Cloud Platform'
+          },
+          {
+            includesAny: ['KEYERA' ],
+            priortxt: 'Suggested Group: ',
+            group: 'N/A - E-mail/Call Client and Resolve.'
           },
           {
             includesAny: ['FVOW10MGMT', 'BC Hydro' ],
