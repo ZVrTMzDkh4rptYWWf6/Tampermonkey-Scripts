@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         ServiceNow Suggested Group Button
-// @version      1.7487
+// @version      1.7488
 // @description  Create a button with the suggested group text and copy it to the assignment group field when clicked
 // @match        https://lvs1.service-now.com/incident*
 // @downloadURL  https://github.com/ZVrTMzDkh4rptYWWf6/Tampermonkey-Scripts/raw/main/SNow_Suggested_Group.user.js
@@ -15,6 +15,9 @@
     setTimeout(() => {
         const incidentDescription = document.getElementById('incident.description');
         const lines = incidentDescription.textContent.split('\n');
+
+        const hasSpecialNote = lines.some(line => line.includes("Enabled") || line.includes("Essentials"));
+
         const checks = [
           // Checks are listed in order of priority to check
           {
@@ -122,10 +125,15 @@
                     isMatchFound = true;
                     suggestedAssignmentGroupText = check.priortxt + '<b>' + check.group + '</b>';
 
+                    // Check for lvs.pod and special note
                     if (foundValue === 'lvs.pod:' && check.group === '') {
                         const podValue = line.split('lvs.pod:')[1].trim();
                         if (podValue !== '') {
                             suggestedAssignmentGroupText += '<b>' + podValue + '</b>';
+
+                            if (hasSpecialNote) {
+                                suggestedAssignmentGroupText = 'Check for client specific runbook/escalation process for <b>Enabled</b> / <b>Essentials</b> devices before routing<br>' + suggestedAssignmentGroupText;
+                            }
                         }
                     }
 
