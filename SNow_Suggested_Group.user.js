@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         ServiceNow Suggested Group Button
-// @version      1.7492
+// @version      1.7494
 // @description  Create a button with the suggested group text and copy it to the assignment group field when clicked
 // @match        https://lvs1.service-now.com/incident*
 // @downloadURL  https://github.com/ZVrTMzDkh4rptYWWf6/Tampermonkey-Scripts/raw/main/SNow_Suggested_Group.user.js
@@ -58,7 +58,7 @@
           {
             includesAny: ['EPCOR' ],
             priortxt: 'Suggested Group: ',
-            group: 'EPCOR Utilities Inc.<br /><b>Be sure to e-mail Epcor Template to Telus Service Desk as per Esc Doc!</b>'
+            group: 'EPCOR Utilities Inc.<br /><b><u>When Paging Out</u>: be sure to e-mail Epcor Template to Telus Service Desk as per Esc Doc!</b>'
           },
           {
             includesAny: ['KEYERA' ],
@@ -134,7 +134,7 @@
                         console.log("Pod value found:", podValue); // Log the extracted pod value
 
                         if (podValue !== '') {
-                            suggestedAssignmentGroupText = 'Suggested Group: <b>' + podValue + '</b>';
+                            suggestedAssignmentGroupText += '<b>' + podValue + '</b>';
                             console.log("Pod Assignment Text Set:", suggestedAssignmentGroupText); // Log the constructed text
 
                         } else {
