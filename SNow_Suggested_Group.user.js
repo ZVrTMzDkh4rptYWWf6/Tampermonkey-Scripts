@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         ServiceNow Suggested Group Button
-// @version      1.7495
+// @version      1.7496
 // @description  Create a button with the suggested group text and copy it to the assignment group field when clicked
 // @match        https://lvs1.service-now.com/incident*
 // @downloadURL  https://github.com/ZVrTMzDkh4rptYWWf6/Tampermonkey-Scripts/raw/main/SNow_Suggested_Group.user.js
@@ -46,6 +46,11 @@
             group: 'BC Hydro VOIP Support'
           },
           {
+            includesAny: ['LVSCALGARY\\', 'Long View Systems Internal Systems'],
+            priortxt: 'Suggested Group: ',
+            group: 'IGS POD AB 1'
+          },
+          {
             includesAny: ['ATB' ],
             priortxt: 'Suggested Group: ',
             group: 'ATB  - Financial Network Support'
@@ -73,11 +78,7 @@
             priortxt: '',
             group: 'Collector Down Alert, Assign to appropriate POD'
           },
-          {
-            includesAny: ['LVSCALGARY\\', 'Long View Systems Internal Systems'],
-            priortxt: 'Suggested Group: ',
-            group: 'IGS POD AB 1'
-          },
+
           {
             includes: 'lvs.pod:',
             priortxt: 'Suggested Group: ',
