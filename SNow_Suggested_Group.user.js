@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         ServiceNow Suggested Group Button
-// @version      1.7496
+// @version      1.7497
 // @description  Create a button with the suggested group text and copy it to the assignment group field when clicked
 // @match        https://lvs1.service-now.com/incident*
 // @downloadURL  https://github.com/ZVrTMzDkh4rptYWWf6/Tampermonkey-Scripts/raw/main/SNow_Suggested_Group.user.js
@@ -46,6 +46,14 @@
             group: 'BC Hydro VOIP Support'
           },
           {
+            includes: 'lvs.igsteam: Network',
+            priortxt: 'Suggested Group: ',
+            group: 'IGS POD NW',
+            //requiresAny: ['IGS POD AB 1', 'LVSCALGARY', 'service_group: Ceres Terminals']
+            requiresAny: ['LVSCALGARY', 'Ceres Terminals', 'Inter Pipeline', 'TraPac', 'Champion Petfoods', 'Parkland County', 'DCP']
+
+          },
+          {
             includesAny: ['LVSCALGARY\\', 'Long View Systems Internal Systems'],
             priortxt: 'Suggested Group: ',
             group: 'IGS POD AB 1'
@@ -64,14 +72,6 @@
             includesAny: ['KEYERA' ],
             priortxt: '',
             group: 'E-mail/Call Client and Resolve.'
-          },
-          {
-            includes: 'lvs.igsteam:Network',
-            priortxt: 'Suggested Group: ',
-            group: 'IGS POD NW',
-            //requiresAny: ['IGS POD AB 1', 'LVSCALGARY', 'service_group: Ceres Terminals']
-            requiresAny: ['LVSCALGARY', 'Ceres Terminals', 'Inter Pipeline', 'TraPac', 'Champion Petfoods', 'Parkland County', 'DCP']
-
           },
           {
             includes: 'LogicMonitor system has not received any data from Collector ',
@@ -97,6 +97,8 @@
                 if (!hasRequiredLabels) {
                     console.log("Skipped Check due to missing required labels:", requiredLabels); // Log reason for skipping
                     continue;
+                } else {
+                    console.log("Required labels found for check:", check, "Labels:", requiredLabels); // Add this log
                 }
             }
 
@@ -108,6 +110,7 @@
                     found = line.includes(check.includes);
                     if (found) {
                         foundValue = check.includes;
+                        console.log("Line matched for includes:", line, "Value:", check.includes); // Add this log
                     }
                 } else if (check.includesAny) {
                     for (const includeItem of check.includesAny) {
