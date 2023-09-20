@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         ServiceNow Suggested Group Button
-// @version      1.7497
+// @version      1.7498
 // @description  Create a button with the suggested group text and copy it to the assignment group field when clicked
 // @match        https://lvs1.service-now.com/incident*
 // @downloadURL  https://github.com/ZVrTMzDkh4rptYWWf6/Tampermonkey-Scripts/raw/main/SNow_Suggested_Group.user.js
@@ -142,7 +142,7 @@
                         }
 
                         if (hasSpecialNote) {
-                            suggestedAssignmentGroupText = 'Check for client specific runbook/escalation process for <b>Enabled</b> / <b>Essentials</b> devices before routing<br>' + suggestedAssignmentGroupText;
+                            suggestedAssignmentGroupText = '<b>Enabled</b> / <b>Essentials</b> device(s) detected.<br />Check for client specific runbook/escalation process before routing.<br />' + suggestedAssignmentGroupText;
                             console.log("Special Note Added:", suggestedAssignmentGroupText); // Log the final text
                         }
 
@@ -159,7 +159,7 @@
             suggestedAssignmentGroupText = 'Suggested Group: <b>UNKNOWN</b>';
 
             if (hasSpecialNote) {
-                suggestedAssignmentGroupText = 'Check for client specific runbook/escalation process for <b>Enabled</b> / <b>Essentials</b> devices before routing<br>' + suggestedAssignmentGroupText;
+                suggestedAssignmentGroupText = '<b>Enabled</b> / <b>Essentials</b> device(s) detected.<br />Check for client specific runbook/escalation process before routing.<br />' + suggestedAssignmentGroupText;
             }
 
         }
