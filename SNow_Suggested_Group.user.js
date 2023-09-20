@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         ServiceNow Suggested Group Button
-// @version      1.7498
+// @version      1.7499
 // @description  Create a button with the suggested group text and copy it to the assignment group field when clicked
 // @match        https://lvs1.service-now.com/incident*
 // @downloadURL  https://github.com/ZVrTMzDkh4rptYWWf6/Tampermonkey-Scripts/raw/main/SNow_Suggested_Group.user.js
@@ -19,71 +19,76 @@
         const hasSpecialNote = lines.some(line => line.includes("Enabled") || line.includes("Essentials"));
 
         const checks = [
-          // Checks are listed in order of priority to check
-          {
-            includesAny: ['VMware recommends not running on a snapshot for more than 24-72 hours', 'Zerto VPG '],
-            priortxt: '',
-            group: 'Check Client ID and route to Client Support POD\n or Windows Support in Remedy.'
-          },
-          {
-            includesAny: ['errors-logged-esb', 'noc-alerts-prod ERROR', 'noc-escalations-prod ERROR', 'noc-itsm-sync-prod', 'noc-jobs-prod ERROR', 'appconsole-errors-esb', 'noc-jobs-daily-prod', 'lvs1esb'],
-            priortxt: 'Suggested Group: ',
-            group: 'Enterprise Service Bus'
-          },
-          {
-            includesAny: ['host_name:mits', 'VMware VM Snapshots-MITS-', 'description: MITS-', 'description: MITS_', 'lmcollector: LVSMITS\\MITS'],
-            priortxt: 'Suggested Group: ',
-            group: 'NOC III'
-          },
-          {
-            includesAny: ['lvs.igsteam:SOC', 'lmcollector: LVSSOC\\SOC-YYC1-MON01P'],
-            priortxt: 'Suggested Group: ',
-            group: 'Security Operations Center'
-          },
-          {
-            includesAny: ['FVOW10MGMT', 'BC Hydro' ],
-            priortxt: 'Suggested Group: ',
-            group: 'BC Hydro VOIP Support'
-          },
-          {
-            includes: 'lvs.igsteam: Network',
-            priortxt: 'Suggested Group: ',
-            group: 'IGS POD NW',
-            //requiresAny: ['IGS POD AB 1', 'LVSCALGARY', 'service_group: Ceres Terminals']
-            requiresAny: ['LVSCALGARY', 'Ceres Terminals', 'Inter Pipeline', 'TraPac', 'Champion Petfoods', 'Parkland County', 'DCP']
-
-          },
-          {
-            includesAny: ['LVSCALGARY\\', 'Long View Systems Internal Systems'],
-            priortxt: 'Suggested Group: ',
-            group: 'IGS POD AB 1'
-          },
-          {
-            includesAny: ['ATB' ],
-            priortxt: 'Suggested Group: ',
-            group: 'ATB  - Financial Network Support'
-          },
-          {
-            includesAny: ['EPCOR' ],
-            priortxt: 'Suggested Group: ',
-            group: 'EPCOR Utilities Inc.<br /><b><u>When Paging Out</u>: be sure to e-mail Epcor Template to Telus Service Desk as per Esc Doc!</b>'
-          },
-          {
-            includesAny: ['KEYERA' ],
-            priortxt: '',
-            group: 'E-mail/Call Client and Resolve.'
-          },
-          {
-            includes: 'LogicMonitor system has not received any data from Collector ',
-            priortxt: '',
-            group: 'Collector Down Alert, Assign to appropriate POD'
-          },
-
-          {
-            includes: 'lvs.pod:',
-            priortxt: 'Suggested Group: ',
-            group: ''
-          }
+              // Checks are listed in order of priority to check
+              {
+                includesAny: ['VMware recommends not running on a snapshot for more than 24-72 hours', 'Zerto VPG '],
+                priortxt: '',
+                group: 'Check Client ID and route to Client Support POD\n or Windows Support in Remedy.'
+              },
+              {
+                includesAny: ['errors-logged-esb', 'noc-alerts-prod ERROR', 'noc-escalations-prod ERROR', 'noc-itsm-sync-prod', 'noc-jobs-prod ERROR', 'appconsole-errors-esb', 'noc-jobs-daily-prod', 'lvs1esb'],
+                priortxt: 'Suggested Group: ',
+                group: 'Enterprise Service Bus'
+              },
+              {
+                includesAny: ['host_name:mits', 'VMware VM Snapshots-MITS-', 'description: MITS-', 'description: MITS_', 'lmcollector: LVSMITS\\MITS'],
+                priortxt: 'Suggested Group: ',
+                group: 'NOC III'
+              },
+              {
+                includesAny: ['lvs.igsteam:SOC', 'lmcollector: LVSSOC\\SOC-YYC1-MON01P'],
+                priortxt: 'Suggested Group: ',
+                group: 'Security Operations Center'
+              },
+              {
+                includesAny: ['FVOW10MGMT', 'BC Hydro' ],
+                priortxt: 'Suggested Group: ',
+                group: 'BC Hydro VOIP Support'
+              },
+              {
+                includes: 'lvs.igsteam: Network',
+                priortxt: 'Suggested Group: ',
+                group: 'IGS POD NW',
+                //requiresAny: ['IGS POD AB 1', 'LVSCALGARY', 'service_group: Ceres Terminals']
+                requiresAny: ['LVSCALGARY', 'Ceres Terminals', 'Inter Pipeline', 'TraPac', 'Champion Petfoods', 'Parkland County', 'DCP']
+              },
+              {
+                includes: 'lvs.igsteam:Cloud',
+                priortxt: 'Suggested Group: ',
+                group: 'Cloud Platform',
+                requiresAny: ['lmcollector:ADMINS\\DC01-ADMSMON01', 'description: DS-System ']
+              },
+              {
+                includesAny: ['LVSCALGARY\\', 'Long View Systems Internal Systems'],
+                priortxt: 'Suggested Group: ',
+                group: 'IGS POD AB 1'
+              },
+              {
+                includesAny: ['ATB' ],
+                priortxt: 'Suggested Group: ',
+                group: 'ATB  - Financial Network Support'
+              },
+              {
+                includesAny: ['EPCOR' ],
+                priortxt: 'Suggested Group: ',
+                group: 'EPCOR Utilities Inc.<br /><b><u>When Paging Out</u>: be sure to e-mail Epcor Template to Telus Service Desk as per Esc Doc!</b>'
+              },
+              {
+                includesAny: ['KEYERA' ],
+                priortxt: '',
+                group: 'E-mail/Call Client and Resolve.'
+              },
+              {
+                includes: 'LogicMonitor system has not received any data from Collector ',
+                priortxt: '',
+                group: 'Collector Down Alert, Assign to appropriate POD'
+              },
+    
+              {
+                includes: 'lvs.pod:',
+                priortxt: 'Suggested Group: ',
+                group: ''
+              }
         ];
         let suggestedAssignmentGroupText = '';
         let isMatchFound = false;
