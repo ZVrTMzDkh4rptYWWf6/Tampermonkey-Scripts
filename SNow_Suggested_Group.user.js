@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         ServiceNow Suggested Group Button
-// @version      1.7499
+// @version      1.7500
 // @description  Create a button with the suggested group text and copy it to the assignment group field when clicked
 // @match        https://lvs1.service-now.com/incident*
 // @downloadURL  https://github.com/ZVrTMzDkh4rptYWWf6/Tampermonkey-Scripts/raw/main/SNow_Suggested_Group.user.js
@@ -72,6 +72,11 @@
                 includesAny: ['EPCOR' ],
                 priortxt: 'Suggested Group: ',
                 group: 'EPCOR Utilities Inc.<br /><b><u>When Paging Out</u>: be sure to e-mail Epcor Template to Telus Service Desk as per Esc Doc!</b>'
+              },
+              {
+                includesAny: ['Leavitt', 'Venturis Capital Corp' ],
+                priortxt: 'Suggested Group: ',
+                group: 'IGS POD BC 1'
               },
               {
                 includesAny: ['KEYERA' ],
