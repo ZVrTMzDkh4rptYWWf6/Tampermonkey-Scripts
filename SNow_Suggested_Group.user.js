@@ -50,7 +50,7 @@
                 priortxt: 'Suggested Group: ',
                 group: 'IGS POD NW',
                 //requiresAny: ['IGS POD AB 1', 'LVSCALGARY', 'service_group: Ceres Terminals']
-                requiresAny: ['LVSCALGARY', 'Ceres Terminals', 'Inter Pipeline', 'TraPac', 'Champion Petfoods', 'Parkland County', 'DCP']
+                requiresAny: ['LVSCALGARY', 'Ceres Terminals', 'Inter Pipeline', 'TraPac', 'Champion Petfoods', 'Parkland County', 'DCP', 'casalemedia.com', 'Index Exchange']
               },
               {
                 includes: 'lvs.igsteam:Cloud',
@@ -76,7 +76,12 @@
               {
                 includesAny: ['Leavitt', 'Venturis Capital Corp' ],
                 priortxt: 'Suggested Group: ',
-                group: 'IGS POD BC 1'
+                group: 'IGS POD NW'
+              },
+              {
+                includesAny: ['casalemedia.com', 'Index Exchange' ],
+                priortxt: 'Suggested Group: ',
+                group: 'IGS POD TO 1'
               },
               {
                 includesAny: ['KEYERA' ],
