@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         ServiceNow Suggested Group Button
-// @version      1.7503
+// @version      1.7504
 // @description  Create a button with the suggested group text and copy it to the assignment group field when clicked
 // @match        https://lvs1.service-now.com/incident*
 // @downloadURL  https://github.com/ZVrTMzDkh4rptYWWf6/Tampermonkey-Scripts/raw/main/SNow_Suggested_Group.user.js
@@ -82,6 +82,11 @@
                 includesAny: ['KEYERA' ],
                 priortxt: '',
                 group: 'E-mail/Call Client and Resolve.'
+              },
+              {
+                includesAny: ['Venturis Capital Corp', 'Venturis Capital' ],
+                priortxt: 'Suggested Group: ',
+                group: 'IGS POD BC 1'
               },
               {
                 includes: 'LogicMonitor system has not received any data from Collector ',
