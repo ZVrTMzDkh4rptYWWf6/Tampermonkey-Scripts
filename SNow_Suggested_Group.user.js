@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         ServiceNow Suggested Group Button
-// @version      1.7504
+// @version      1.7505
 // @description  Create a button with the suggested group text and copy it to the assignment group field when clicked
 // @match        https://lvs1.service-now.com/incident*
 // @downloadURL  https://github.com/ZVrTMzDkh4rptYWWf6/Tampermonkey-Scripts/raw/main/SNow_Suggested_Group.user.js
@@ -13,6 +13,28 @@
     'use strict';
 
     setTimeout(() => {
+
+        // Delayed execution to ensure the 'Toggle Domain Scope' button is available
+        setTimeout(() => {
+            var domainAlert = document.getElementById('domain_alert');
+            var toggleButton = document.querySelector('button[onclick*="onToggleDomainScope()"]');
+
+            // Check if the domain scope alert is present and the toggle button exists
+            if (!domainAlert && toggleButton) {
+                try {
+                    toggleButton.click();
+                    console.log('Domain scope toggle button clicked.');
+                } catch (error) {
+                    console.error('Error while clicking toggle button:', error);
+                }
+            } else if (domainAlert) {
+                console.log('Domain scope already expanded.');
+            } else {
+                console.error('Toggle Domain Scope button not found.');
+            }
+        }, 1000); // Adjust this delay as needed
+
+
         const incidentDescription = document.getElementById('incident.description');
         const lines = incidentDescription.textContent.split('\n');
 
@@ -187,4 +209,5 @@
         assignmentGroupDiv.parentNode.insertBefore(suggestedGroupDiv, assignmentGroupDiv);
 
     }, 250);
+
 })();
