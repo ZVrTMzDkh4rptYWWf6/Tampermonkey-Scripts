@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         ServiceNow Suggested Group Button
-// @version      1.7505
+// @version      1.7506
 // @description  Create a button with the suggested group text and copy it to the assignment group field when clicked
 // @match        https://lvs1.service-now.com/incident*
 // @downloadURL  https://github.com/ZVrTMzDkh4rptYWWf6/Tampermonkey-Scripts/raw/main/SNow_Suggested_Group.user.js
@@ -16,7 +16,48 @@
 
         // Delayed execution to ensure the 'Toggle Domain Scope' button is available
         setTimeout(() => {
+
+            // Detect the SNow notice that the domain has already been toggled
             var domainAlert = document.getElementById('domain_alert');
+
+            // Create the floating text element
+            var floatingText = document.createElement('div');
+            floatingText.innerHTML = 'Domain Scope\nToggled';
+            floatingText.style.cssText = `
+                position: fixed;
+                top: 5px; /* Adjust as needed */
+                left: 90.5%; /* Center horizontally */
+                transform: translateX(-50%);
+                background-color: rgba(0, 0, 0, 0.7);
+                color: white;
+                padding: 5px 10px;
+                border-radius: 5px;
+                opacity: 0;
+                transition: opacity 1s;
+                z-index: 1000; /* Ensure it floats above other content */
+            `;
+            document.body.appendChild(floatingText);
+
+            // Define CSS for animations
+            var styleSheet = document.createElement("style");
+            styleSheet.type = "text/css";
+            styleSheet.innerText = `
+                @keyframes fadeInSlideDown {
+                    from { top: 0; opacity: 0; }
+                    to { top: 5px; opacity: 1; }
+                }
+                @keyframes fadeOutSlideUp {
+                    from { top: 5px; opacity: 1; }
+                    to { top: 0; opacity: 0; }
+                }
+                 @keyframes fadeOutSlideDown {
+                    from { top: 5px; opacity: 1; }
+                    to { top: 15px; opacity: 0; }
+                }
+            `;
+            document.head.appendChild(styleSheet);
+
+            // Detect the Toggle Button
             var toggleButton = document.querySelector('button[onclick*="onToggleDomainScope()"]');
 
             // Check if the domain scope alert is present and the toggle button exists
@@ -24,6 +65,24 @@
                 try {
                     toggleButton.click();
                     console.log('Domain scope toggle button clicked.');
+
+                    // Show floating text
+                    //floatingText.style.opacity = 1;
+                    floatingText.style.zIndex = 1000; // Bring to front
+                    floatingText.style.animation = 'fadeInSlideDown 1s forwards';
+
+                    // After 5 seconds, start fading out
+                    setTimeout(() => {
+                        //floatingText.style.opacity = 0;
+                        floatingText.style.animation = 'fadeOutSlideDown 1s forwards';
+
+                        // Remove the element after the transition ends
+                        setTimeout(() => {
+                            floatingText.parentNode.removeChild(floatingText);
+                        }, 1000); // This should match the duration of the opacity transition
+
+                    }, 5000);
+
                 } catch (error) {
                     console.error('Error while clicking toggle button:', error);
                 }
