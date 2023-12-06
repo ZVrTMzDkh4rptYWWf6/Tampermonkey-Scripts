@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         ServiceNow Suggested Group Button
-// @version      1.7507
+// @version      1.7508
 // @description  Create a button with the suggested group text and copy it to the assignment group field when clicked
 // @match        https://lvs1.service-now.com/incident*
 // @downloadURL  https://github.com/ZVrTMzDkh4rptYWWf6/Tampermonkey-Scripts/raw/main/SNow_Suggested_Group.user.js
@@ -34,7 +34,7 @@
                 border-radius: 5px;
                 opacity: 0;
                 transition: opacity 1s;
-                z-index: 1000; /* Ensure it floats above other content */
+                z-index: -1000; /* Ensure its behind other content by default */
             `;
             document.body.appendChild(floatingText);
 
