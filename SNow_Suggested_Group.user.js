@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         ServiceNow Suggested Group Button
-// @version      1.7506
+// @version      1.7507
 // @description  Create a button with the suggested group text and copy it to the assignment group field when clicked
 // @match        https://lvs1.service-now.com/incident*
 // @downloadURL  https://github.com/ZVrTMzDkh4rptYWWf6/Tampermonkey-Scripts/raw/main/SNow_Suggested_Group.user.js
@@ -91,7 +91,7 @@
             } else {
                 console.error('Toggle Domain Scope button not found.');
             }
-        }, 1000); // Adjust this delay as needed
+        }, 250); // Adjust this delay as needed
 
 
         const incidentDescription = document.getElementById('incident.description');
