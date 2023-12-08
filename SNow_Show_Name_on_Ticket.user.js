@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         ServiceNow Show Ticket Creator Email at top of Incident
-// @version      1.487
+// @version      1.490
 // @description  Show the Name of the ticket creator, extracted from the last e-mail address,at the top of the ticket information section.
 // @match        https://lvs1.service-now.com/incident*
 // @downloadURL  https://github.com/ZVrTMzDkh4rptYWWf6/Tampermonkey-Scripts/raw/main/SNow_Show_Name_on_Ticket.user.js
@@ -13,62 +13,88 @@
     'use strict';
 
     setTimeout(function() {
-        var creatorEmailAddress = null;
-        var emailRegex = /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i;
+        var creatorEmailAddress = getEmailAddress();
+        var originalTitle = document.title;
+        var newTitle = null;
 
-        var createdByText = document.querySelector('.sn-card-component-createdby');
-        var createdByEmails = document.querySelectorAll('[id^="activity_"] .sn-widget-textblock-body');
-        var lastEmail = null;
-
-        if (createdByEmails.length > 0) {
-            lastEmail = createdByEmails[createdByEmails.length-1];
-            creatorEmailAddress = lastEmail.textContent.trim();
-        }
-
-        var creatorNameDisplay = document.createElement('div');
-        var labelNumber = document.getElementById('label.incident.number');
-
-        if (creatorEmailAddress && emailRegex.test(creatorEmailAddress)) {
-            var firstLast = creatorEmailAddress.split('@')[0];
-            var creatorFirstName = firstLast.split('.')[0].charAt(0).toUpperCase() + firstLast.split('.')[0].slice(1);
-            var creatorLastName = firstLast.split('.')[1].charAt(0).toUpperCase() + firstLast.split('.')[1].slice(1);
-            creatorNameDisplay.innerHTML = 'Ticket Created by: </br><b>' + creatorFirstName + ' ' + creatorLastName + '</b>';
-            labelNumber.parentNode.insertBefore(creatorNameDisplay, labelNumber);
-
-            // Update the page title
-            var originalTitle = document.title;
-            var newTitle = creatorFirstName + ' - ' + originalTitle;
-            document.title = newTitle;
-
-            // Remove the name from the title after 25 seconds
-            setTimeout(function() {
-                document.title = originalTitle;
-            }, 25000);
+        if (creatorEmailAddress) {
+            var name = getNameFromEmail(creatorEmailAddress);
+            displayCreatorName(name);
+            //newTitle = name.firstName + ' - ' + originalTitle;
+            //updateTitleTemporarily(newTitle, originalTitle);
         } else {
-            var inputElement = document.getElementById('incident.sys_created_by');
-            var originalTitle = document.title;
-            if (inputElement && inputElement.value) {
-                var creatorEmailAddress = inputElement.value.trim();
-                if (emailRegex.test(creatorEmailAddress)) {
-                    var firstLast = creatorEmailAddress.split('@')[0];
-                    var creatorFirstName = firstLast.split('.')[0].charAt(0).toUpperCase() + firstLast.split('.')[0].slice(1);
-                    var creatorLastName = firstLast.split('.')[1].charAt(0).toUpperCase() + firstLast.split('.')[1].slice(1);
-                    creatorNameDisplay.innerHTML = 'Ticket Created by: </br><b>' + creatorFirstName + ' ' + creatorLastName + '</b>';
-                    labelNumber.parentNode.insertBefore(creatorNameDisplay, labelNumber);
-
-                    // Update the page title
-                    var newTitle = creatorFirstName + ' - ' + originalTitle;
-                    document.title = newTitle;
-
-                    // Remove the name from the title after 25 seconds
-                    setTimeout(function() {
-                        document.title = originalTitle;
-                    }, 25000);
-                } else {
-                    creatorNameDisplay.innerHTML = 'Ticket may have been manually created, or no name found where expected';
-                    labelNumber.parentNode.insertBefore(creatorNameDisplay, labelNumber);
-                }
-            }
+            displayErrorMessage();
         }
     }, 250);
+
+    function getEmailAddress() {
+        var emailRegex = /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/i;
+        var createdByEmails = document.querySelectorAll('[id^="activity_"] .sn-widget-textblock-body');
+        for (var i = createdByEmails.length - 1; i >= 0; i--) {
+            var possibleEmailText = createdByEmails[i].textContent.trim();
+            if (emailRegex.test(possibleEmailText)) {
+                //console.log('Email from activity:', possibleEmailText); // Debug log
+                return possibleEmailText.match(emailRegex)[0];
+            }
+        }
+
+        var inputElement = document.getElementById('incident.sys_created_by');
+        if (inputElement && emailRegex.test(inputElement.value)) {
+            //console.log('Email from editable input:', inputElement.value.trim()); // Debug log
+            return inputElement.value.trim();
+        }
+
+        var readonlyInputElement = document.getElementById('sys_readonly.incident.sys_created_by');
+        if (readonlyInputElement && emailRegex.test(readonlyInputElement.value)) {
+            //console.log('Email from readonly input:', readonlyInputElement.value.trim()); // Debug log
+            return readonlyInputElement.value.trim();
+        }
+
+        //console.log('No valid email address found'); // Debug log
+        return null;
+    }
+
+    function getNameFromEmail(email) {
+        var emailRegex = /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i;
+        if (emailRegex.test(email)) {
+            var firstLast = email.split('@')[0];
+            var firstName = firstLast.split('.')[0].charAt(0).toUpperCase() + firstLast.split('.')[0].slice(1);
+            var lastName = firstLast.split('.')[1].charAt(0).toUpperCase() + firstLast.split('.')[1].slice(1);
+            return { firstName: firstName, lastName: lastName };
+        }
+
+        return null;
+    }
+
+    function displayCreatorName(name) {
+        if (name) {
+            var creatorNameDisplay = document.createElement('div');
+            creatorNameDisplay.innerHTML = 'Ticket Created by: </br><b>' + name.firstName + ' ' + name.lastName + '</b>';
+            var labelNumber = document.getElementById('label.incident.number');
+            if (labelNumber) {
+                labelNumber.parentNode.insertBefore(creatorNameDisplay, labelNumber);
+            }
+        }
+    }
+
+    function updateTitleTemporarily(newTitle, originalTitle) {
+        var interval = setInterval(function() {
+            document.title = newTitle;
+        }, 1000); // Update every second
+
+        setTimeout(function() {
+            clearInterval(interval);
+            document.title = originalTitle;
+        }, 20000); // Reset after 20 seconds
+    }
+
+    function displayErrorMessage() {
+        var creatorNameDisplay = document.createElement('div');
+        creatorNameDisplay.innerHTML = 'Ticket may have been manually created, or no name found where expected';
+        var labelNumber = document.getElementById('label.incident.number');
+        if (labelNumber) {
+            labelNumber.parentNode.insertBefore(creatorNameDisplay, labelNumber);
+        }
+    }
+
 })();
