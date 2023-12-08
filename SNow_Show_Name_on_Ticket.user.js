@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         ServiceNow Show Ticket Creator Email at top of Incident
-// @version      1.490
+// @version      1.491
 // @description  Show the Name of the ticket creator, extracted from the last e-mail address,at the top of the ticket information section.
 // @match        https://lvs1.service-now.com/incident*
 // @downloadURL  https://github.com/ZVrTMzDkh4rptYWWf6/Tampermonkey-Scripts/raw/main/SNow_Show_Name_on_Ticket.user.js
@@ -11,21 +11,6 @@
 
 (function() {
     'use strict';
-
-    setTimeout(function() {
-        var creatorEmailAddress = getEmailAddress();
-        var originalTitle = document.title;
-        var newTitle = null;
-
-        if (creatorEmailAddress) {
-            var name = getNameFromEmail(creatorEmailAddress);
-            displayCreatorName(name);
-            //newTitle = name.firstName + ' - ' + originalTitle;
-            //updateTitleTemporarily(newTitle, originalTitle);
-        } else {
-            displayErrorMessage();
-        }
-    }, 250);
 
     function getEmailAddress() {
         var emailRegex = /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/i;
@@ -96,5 +81,20 @@
             labelNumber.parentNode.insertBefore(creatorNameDisplay, labelNumber);
         }
     }
+
+    setTimeout(function() {
+        var creatorEmailAddress = getEmailAddress();
+        var originalTitle = document.title;
+        var newTitle = null;
+
+        if (creatorEmailAddress) {
+            var name = getNameFromEmail(creatorEmailAddress);
+            displayCreatorName(name);
+            //newTitle = name.firstName + ' - ' + originalTitle;
+            //updateTitleTemporarily(newTitle, originalTitle);
+        } else {
+            displayErrorMessage();
+        }
+    }, 250);
 
 })();
