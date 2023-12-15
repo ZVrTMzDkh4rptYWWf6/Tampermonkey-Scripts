@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         ServiceNow Suggested Group Button
-// @version      1.7517
+// @version      1.7518
 // @description  Create a button with the suggested group text and copy it to the assignment group field when clicked
 // @match        https://lvs1.service-now.com/incident*
 // @downloadURL  https://github.com/ZVrTMzDkh4rptYWWf6/Tampermonkey-Scripts/raw/main/SNow_Suggested_Group.user.js
@@ -141,7 +141,7 @@
 
     function showFloatingText() {
         var floatingText = document.createElement('div');
-        floatingText.innerHTML = 'Domain Scope\nToggled';
+        floatingText.innerHTML = 'Domain Scope\n Auto-Toggled';
         floatingText.className = 'floating-text';
         document.body.appendChild(floatingText);
 
@@ -229,7 +229,7 @@
             if (essentialsDetected) specificDevices.push("Essentials");
 
             let devicesText = specificDevices.join('/');
-            suggestedText = `${specialNotes.join('<br />')}<br />Check for client specific runbook/escalation process for any <font color="red">${devicesText}</font> devices before routing.<br />${suggestedText}`;
+            suggestedText = `${specialNotes.join('<br />')}<br />Check for client specific runbook/escalation process for any <font color="red">${devicesText}</font> devices <b>before routing</b>.<br />${suggestedText}`;
         }
 
         return suggestedText;
