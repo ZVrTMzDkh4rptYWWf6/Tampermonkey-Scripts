@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         ServiceNow Suggested Group Button
-// @version      1.7518
+// @version      1.7519
 // @description  Create a button with the suggested group text and copy it to the assignment group field when clicked
 // @match        https://lvs1.service-now.com/incident*
 // @downloadURL  https://github.com/ZVrTMzDkh4rptYWWf6/Tampermonkey-Scripts/raw/main/SNow_Suggested_Group.user.js
@@ -141,7 +141,7 @@
 
     function showFloatingText() {
         var floatingText = document.createElement('div');
-        floatingText.innerHTML = 'Domain Scope\n Auto-Toggled';
+        floatingText.innerHTML = 'Domain Scope<br />Auto-Toggled';
         floatingText.className = 'floating-text';
         document.body.appendChild(floatingText);
 
