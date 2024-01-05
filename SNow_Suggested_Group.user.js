@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         ServiceNow Suggested Group Button
-// @version      1.7519
+// @version      1.7520
 // @description  Create a button with the suggested group text and copy it to the assignment group field when clicked
 // @match        https://lvs1.service-now.com/incident*
 // @downloadURL  https://github.com/ZVrTMzDkh4rptYWWf6/Tampermonkey-Scripts/raw/main/SNow_Suggested_Group.user.js
@@ -69,6 +69,18 @@
             includesAny: ['EPCOR' ],
             priortxt: '<b><u><font color="red">When Paging Out</font></u>: be sure to e-mail EPCOR Template to Telus Service Desk as per Esc Doc!</b><br />Group Suggestion: ',
             group: 'EPCOR Utilities Inc. Support'
+          },
+          {
+            includes: ['lmcollector: BLACKJACK' ],
+            priortxt: 'Possible <b><u><font color="red">Database Alert</font></u>: GCGC Does not subscribe to LVS Database services.</b><br />E-mail alert to address listed in Runbook for any "<b>Database related alerts</b>" Otherwise<br/>Group Suggestion: ',
+            group: 'IGS POD BC 1',
+            requiresAny: ['SQL System Jobs', 'SQL Server']
+          },
+          {
+            includes: ['lmcollector: BLACKJACK' ],
+            priortxt: 'Possible <b><u><font color="red">Exchange Alert</font></u>: GCGC Does not subscribe to LVS Exchange services.</b><br />E-mail alert to address listed in Runbook for any "<b>Exchange related alerts</b>" Otherwise<br/>Group Suggestion: ',
+            group: 'IGS POD BC 1',
+            requiresAny: ['Windows Exchange Events', 'Exchange Event']
           },
           {
             includesAny: ['casalemedia.com', 'Index Exchange' ],
