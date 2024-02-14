@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         ServiceNow Suggested Group Button
-// @version      1.7600
+// @version      1.7601
 // @description  Create a button with the suggested group text and copy it to the assignment group field when clicked
 // @match        https://lvs1.service-now.com/incident*
 // @downloadURL  https://github.com/ZVrTMzDkh4rptYWWf6/Tampermonkey-Scripts/raw/main/SNow_Suggested_Group.user.js
@@ -77,7 +77,7 @@
           },
           {
             includes: ['Anschutz' ],
-            priortxt: '<b>Assign to POD to review SQL related alerts regardless of Enabled/Essentials status.</b><br/>Group Suggestion: ',
+            priortxt: '<b>Assign to POD to review SQL related alerts regardless of Enabled/Essentials status.</b><br/>',
             group: 'IGS POD US 1',
             requiresAny: ['SQL System Jobs', 'MSSQLSERVER', 'SQL Server', 'Windows SQL Events']
           },
