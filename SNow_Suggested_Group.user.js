@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         ServiceNow Suggested Group Button
-// @version      1.7601
+// @version      1.7602
 // @description  Create a button with the suggested group text and copy it to the assignment group field when clicked
 // @match        https://lvs1.service-now.com/incident*
 // @downloadURL  https://github.com/ZVrTMzDkh4rptYWWf6/Tampermonkey-Scripts/raw/main/SNow_Suggested_Group.user.js
@@ -68,7 +68,7 @@
           {
             includesAny: ['BAYSHORE' ],
             priortxt: '',
-            group: 'For Critical Alerts<br/>E-mail and Call Client then Resolve.'
+            group: 'For Critical Alerts: E-mail and Call Client then Resolve.'
           },
           {
             includesAny: ['EPCOR' ],
@@ -228,6 +228,24 @@
     }
 
 
+    function checkForMissingCriticalInfo(lines) {
+        const criticalKeys = [
+            { key: 'lvs.managedservicelevel:', label: 'Managed Service Level' },
+            { key: 'lvs.supporthours:', label: 'Support Hours' },
+            { key: 'lvs.supportlevel:', label: 'Support Level' }
+        ];
+
+        let missingKeys = criticalKeys.filter(({ key }) =>
+                                              !lines.some(line => line.includes(key) && line.split(key)[1].trim() !== '')
+                                             ).map(({ label }) => label);
+
+        if (missingKeys.length > 0) {
+            return `<br /><font color="red">Ticket is missing key critical information: <br /><b>${missingKeys.join(', ')}</b><br />  Please forward ticket to Pod or Site Manager as a device in the ticket may be onboarding.</font><br /><br />`;
+        }
+        return '';
+    }
+
+
     function processMatch(foundValue, check, line, lines) {
         // Initialize variables
         let suggestedGroupInfo = {
@@ -268,6 +286,9 @@
             specialNoteText = `Check for client specific runbook/escalation process for any <b><font color="red">${devicesText}</font></b> devices <b>before routing</b>.<br />`;
         }
 
+        let missingInfoText = checkForMissingCriticalInfo(lines);
+        specialNoteText = missingInfoText + specialNoteText; // Prepend any found missing info messages to the existing note
+
         // Combine text
         let combinedText = deviceCountsText + specialNoteText + suggestedGroupInfo.text;
 
@@ -284,7 +305,6 @@
 
         return suggestedGroupInfo;
     }
-
 
     function createAndInsertElement(tagName, attributes, innerHTML, parent, insertBefore) {
         let element = document.createElement(tagName);
