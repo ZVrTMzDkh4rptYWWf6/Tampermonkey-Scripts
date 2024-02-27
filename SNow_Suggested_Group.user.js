@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         ServiceNow Suggested Group Button
-// @version      1.7602
+// @version      1.7603
 // @description  Create a button with the suggested group text and copy it to the assignment group field when clicked
 // @match        https://lvs1.service-now.com/incident*
 // @downloadURL  https://github.com/ZVrTMzDkh4rptYWWf6/Tampermonkey-Scripts/raw/main/SNow_Suggested_Group.user.js
@@ -17,110 +17,136 @@
     const checks = [
           // Checks are listed in order of priority to check
           {
-            includesAny: ['VMware recommends not running on a snapshot for more than 24-72 hours', 'Zerto VPG '],
-            priortxt: '',
-            group: 'Check Client ID and route to Client Support POD<br />or Windows Support in Remedy.'
+              // VMWare Snapshots
+              includesAny: ['VMware recommends not running on a snapshot for more than 24-72 hours', 'Zerto VPG '],
+              priortxt: '',
+              group: 'Check Client ID and route to Client Support POD<br />or Windows Support in Remedy.'
           },
           {
-            includesAny: ['errors-logged-esb', 'noc-alerts-prod ERROR', 'noc-escalations-prod ERROR', 'noc-itsm-sync-prod', 'noc-jobs-prod ERROR', 'appconsole-errors-esb', 'noc-jobs-daily-prod', 'lvs1esb'],
-            priortxt: '',
-            group: 'Enterprise Service Bus'
+              // Enterprise Service Bus
+              includesAny: ['errors-logged-esb', 'noc-alerts-prod ERROR', 'noc-escalations-prod ERROR', 'noc-itsm-sync-prod', 'noc-jobs-prod ERROR', 'appconsole-errors-esb', 'noc-jobs-daily-prod', 'lvs1esb'],
+              priortxt: '',
+              group: 'Enterprise Service Bus'
           },
           {
-            //includesAny: ['host_name:mits', 'VMware VM Snapshots-MITS-', 'description: MITS-', 'description: MITS_', 'lmcollector: LVSMITS\\MITS'],
-            includesAny: ['host_name:mits', 'VMware VM Snapshots-MITS-', 'description: MITS-', 'description: MITS_'],
-            priortxt: '',
-            group: 'NOC III'
+              // MITS Devices
+              //includesAny: ['host_name:mits', 'VMware VM Snapshots-MITS-', 'description: MITS-', 'description: MITS_', 'lmcollector: LVSMITS\\MITS'],
+              includesAny: ['host_name:mits', 'VMware VM Snapshots-MITS-', 'description: MITS-', 'description: MITS_'],
+              priortxt: '',
+              group: 'NOC III'
           },
           {
-            includesAny: ['lvs.igsteam:SOC', 'lmcollector: LVSSOC\\SOC-YYC1-MON01P'],
-            priortxt: '',
-            group: 'Security Operations Center'
+              // Security Operations Center
+              includesAny: ['lvs.igsteam:SOC', 'lmcollector: LVSSOC\\SOC-YYC1-MON01P'],
+              priortxt: '',
+              group: 'Security Operations Center'
           },
           {
-            includesAny: ['FVOW10MGMT', 'BC Hydro' ],
-            priortxt: '',
-            group: 'BC Hydro VOIP Support'
+              // BC Hydro
+              includesAny: ['FVOW10MGMT', 'BC Hydro' ],
+              priortxt: '',
+              group: 'BC Hydro VOIP Support'
           },
           {
-            includes: 'lvs.igsteam: Network',
-            priortxt: '',
-            group: 'IGS POD NW',
-            //requiresAny: ['IGS POD AB 1', 'LVSCALGARY', 'service_group: Ceres Terminals']
-            requiresAny: ['LVSCALGARY', 'Ceres Terminals', 'Inter Pipeline', 'TraPac', 'Champion Petfoods', 'Parkland County']
+              // ITO 'Network Voice' Tickets stay with IGS POD AB 1, don't send to IGS POD NW
+              includes: 'lvs.igsteam: Network Voice',
+              priortxt: '',
+              group: 'IGS POD AB 1',
+              requiresAny: ['LVSCALGARY']
           },
           {
-            includes: 'lvs.igsteam:Cloud',
-            priortxt: '',
-            group: 'Cloud Platform',
-            requiresAny: ['lmcollector:ADMINS\\DC01-ADMSMON01', 'description: DS-System ']
+              // Network Tickets for the 'requiresAny' Clients all go to IGS POD NW
+              includes: 'lvs.igsteam: Network',
+              priortxt: '',
+              group: 'IGS POD NW',
+              requiresAny: ['LVSCALGARY', 'Ceres Terminals', 'Inter Pipeline', 'TraPac', 'Champion Petfoods', 'Parkland County']
           },
           {
-            includesAny: ['LVSCALGARY\\', 'Long View Systems Internal Systems'],
-            priortxt: '',
-            group: 'IGS POD AB 1'
+              // Cloud Platform Devices
+              includes: 'lvs.igsteam:Cloud',
+              priortxt: '',
+              group: 'Cloud Platform',
+              requiresAny: ['lmcollector:ADMINS\\DC01-ADMSMON01', 'description: DS-System ']
           },
           {
-            includesAny: ['ATB' ],
-            priortxt: '',
-            group: 'ATB  - Financial Network Support'
+              // ITO Tickets go to IGS POD AB 1
+              includesAny: ['LVSCALGARY\\', 'Long View Systems Internal Systems'],
+              priortxt: '',
+              group: 'IGS POD AB 1'
           },
           {
-            includesAny: ['BAYSHORE' ],
-            priortxt: '',
-            group: 'For Critical Alerts: E-mail and Call Client then Resolve.'
+              // ATB goes to ATB  - Financial Network Support
+              includesAny: ['ATB' ],
+              priortxt: '',
+              group: 'ATB  - Financial Network Support'
           },
           {
-            includesAny: ['EPCOR' ],
-            priortxt: '<b><u><font color="red">When Paging Out</font></u></b>: be sure to e-mail EPCOR Template to Telus Service Desk as per Esc Doc!<br />',
-            group: 'EPCOR Utilities Inc. Support'
+              // Bayshore, No IGS Support
+              includesAny: ['BAYSHORE' ],
+              priortxt: '',
+              group: 'For Critical Alerts: E-mail and Call Client then Resolve.'
           },
           {
-            includes: ['Anschutz' ],
-            priortxt: '<b>Assign to POD to review SQL related alerts regardless of Enabled/Essentials status.</b><br/>',
-            group: 'IGS POD US 1',
-            requiresAny: ['SQL System Jobs', 'MSSQLSERVER', 'SQL Server', 'Windows SQL Events']
+              // EPCOR goes to EPCOR Utilities Inc. Support
+              includesAny: ['EPCOR' ],
+              priortxt: '<b><u><font color="red">When Paging Out</font></u></b>: be sure to e-mail EPCOR Template to Telus Service Desk as per Esc Doc!<br />',
+              group: 'EPCOR Utilities Inc. Support'
           },
           {
-            includes: ['lmcollector: BLACKJACK' ],
-            priortxt: 'Possible <b><u><font color="red">Database Alert</font></u>: GCGC Does not subscribe to LVS Database services.</b><br />E-mail alert to address listed in Runbook for any "<b>Database related alerts</b>" Otherwise<br/>',
-            group: 'IGS POD BC 1',
-            requiresAny: ['SQL System Jobs', 'SQL Server']
-
+              // Anschutz SQL Tickets always go to IGS POD US 1
+              includes: ['Anschutz' ],
+              priortxt: '<b>Assign to POD to review SQL related alerts regardless of Enabled/Essentials status.</b><br/>',
+              group: 'IGS POD US 1',
+              requiresAny: ['SQL System Jobs', 'MSSQLSERVER', 'SQL Server', 'Windows SQL Events']
           },
           {
-            includes: ['lmcollector: BLACKJACK' ],
-            priortxt: 'Possible <b><u><font color="red">Exchange Alert</font></u>: GCGC Does not subscribe to LVS Exchange services.</b><br />E-mail alert to address listed in Runbook for any "<b>Exchange related alerts</b>" Otherwise<br/>',
-            group: 'IGS POD BC 1',
-            requiresAny: ['Windows Exchange Events', 'Exchange Event']
+              // GCGC Does not subscribe to LVS Database Services
+              includes: ['lmcollector: BLACKJACK' ],
+              priortxt: 'Possible <b><u><font color="red">Database Alert</font></u>: GCGC Does not subscribe to LVS Database services.</b><br />E-mail alert to address listed in Runbook for any "<b>Database related alerts</b>" Otherwise<br/>',
+              group: 'IGS POD BC 1',
+              requiresAny: ['SQL System Jobs', 'SQL Server']
           },
           {
-            includesAny: ['casalemedia.com', 'Index Exchange' ],
-            priortxt: '',
-            group: 'IGS POD TO 1'
+              // GCGC Does not subscribe to LVS Exchange Services
+              includes: ['lmcollector: BLACKJACK' ],
+              priortxt: 'Possible <b><u><font color="red">Exchange Alert</font></u>: GCGC Does not subscribe to LVS Exchange services.</b><br />E-mail alert to address listed in Runbook for any "<b>Exchange related alerts</b>" Otherwise<br/>',
+              group: 'IGS POD BC 1',
+              requiresAny: ['Windows Exchange Events', 'Exchange Event']
           },
           {
-            includesAny: ['KEYERA' ],
-            priortxt: '',
-            group: 'E-mail/Call Client and Resolve.'
+              // Index Exchange goes to IGS POD TO 1
+              includesAny: ['casalemedia.com', 'Index Exchange' ],
+              priortxt: '',
+              group: 'IGS POD TO 1'
           },
           {
-            includesAny: ['Venturis Capital Corp', 'Venturis Capital' ],
-            priortxt: '',
-            group: 'IGS POD BC 1'
+              // Keyera has their own IT Support, E-mail/Call Client and resolve.
+              includesAny: ['KEYERA' ],
+              priortxt: '',
+              group: 'E-mail/Call Client and Resolve.'
           },
           {
-            includes: 'LogicMonitor system has not received any data from Collector ',
-            priortxt: '',
-            group: 'Collector Down Alert, Assign to appropriate POD'
+              // Leavitt Manaul Tickets got o IGS POD BC 1
+              includesAny: ['Venturis Capital Corp', 'Venturis Capital' ],
+              priortxt: '',
+              group: 'IGS POD BC 1'
           },
           {
-            includes: 'lvs.pod:',
-            group: ''
+              // Collector Down Alert
+              includes: 'LogicMonitor system has not received any data from Collector ',
+              priortxt: '',
+              group: 'Collector Down Alert, Assign to appropriate POD'
+          },
+          {
+              // No Match to anything else, confirm ticket contains "lvs.pod:" to allow script to show 'Unknown Group'
+              // Otherwise no match = do not inject any of the DIVs as this may be a completely manual ticket with no alert details.
+              includes: 'lvs.pod:',
+              group: ''
           }
     ];
 
 
+    // Debug Function to log messages to console if enabled at top of script
     function logDebug(...messages) {
         if (debugMode) {
             console.log(...messages);
@@ -128,6 +154,7 @@
     }
 
 
+    // Toggle the Domain Scope to allow editing of the ticket if its not an ITO ticket.
     function checkDomainScope() {
         var domainAlert = document.getElementById('domain_alert');
         var toggleButton = document.querySelector('button[onclick*="onToggleDomainScope()"]');
@@ -143,6 +170,7 @@
     }
 
 
+    // Create animation style to make it obvious that the domain scope was toggled.
     function addAnimationStyles() {
         var styleSheet = document.createElement("style");
         styleSheet.type = "text/css";
@@ -166,6 +194,7 @@
     }
 
 
+    // Show Floating Text near the Toggle Domain Scope Button
     function showFloatingText() {
         var floatingText = document.createElement('div');
         floatingText.innerHTML = 'Domain Scope<br />Auto-Toggled';
@@ -182,6 +211,7 @@
     }
 
 
+    // Extract the Incident Description from either sys_readonly.incident.descroption (Older Closed Tickets), or incident.description (Current/New/In Progress)
     function getincidentDescription() {
         const descriptionIds = ['sys_readonly.incident.description', 'incident.description'];
         for (let id of descriptionIds) {
@@ -196,6 +226,7 @@
     }
 
 
+    // Line Match Function
     function checkLineForMatch(line, check) {
         if (check.includes) {
             return line.includes(check.includes) ? check.includes : false;
@@ -206,6 +237,7 @@
     }
 
 
+    // Device Count Function
     function countDeviceTypes(lines) {
         let count = { Enabled: 0, Essentials: 0, Empowered: 0 };
 
@@ -219,6 +251,7 @@
     }
 
 
+    // Format Device Count
     function formatDeviceCount(count, type) {
         const deviceLabel = count === 1 ? 'device' : 'devices';
         const formattedType = type === "Enabled" || type === "Essentials"
@@ -228,6 +261,7 @@
     }
 
 
+    // Check for missing Key Critical Info
     function checkForMissingCriticalInfo(lines) {
         const criticalKeys = [
             { key: 'lvs.managedservicelevel:', label: 'Managed Service Level' },
@@ -240,12 +274,13 @@
                                              ).map(({ label }) => label);
 
         if (missingKeys.length > 0) {
-            return `<br /><font color="red">Ticket is missing key critical information: <br /><b>${missingKeys.join(', ')}</b><br />  Please forward ticket to Pod or Site Manager as a device in the ticket may be onboarding.</font><br /><br />`;
+            return `<br /><font color="red">Ticket is missing key critical information: <br /><b>${missingKeys.join(', ')}</b><br />Please forward ticket to Pod or Site Manager as a device in the ticket may be onboarding.</font><br /><br />`;
         }
         return '';
     }
 
 
+    // Primary Process Match Function
     function processMatch(foundValue, check, line, lines) {
         // Initialize variables
         let suggestedGroupInfo = {
@@ -295,6 +330,8 @@
         // Display logic
         if (currentMode === "NOC") {
             insertSuggestedGroupDisplay(combinedText);
+        } else if (currentMode === "GSD") {
+            // Do nothing for now
         } else if (currentMode === "IGS") {
             // For IGS, display device counts in a specific location, and suggested group text elsewhere without special notes
             updateDeviceCountsDisplayIGSMode(deviceCounts);
@@ -306,6 +343,7 @@
         return suggestedGroupInfo;
     }
 
+    // Create and Insert Element Function
     function createAndInsertElement(tagName, attributes, innerHTML, parent, insertBefore) {
         let element = document.createElement(tagName);
         Object.keys(attributes).forEach(attr => element.setAttribute(attr, attributes[attr]));
@@ -319,8 +357,9 @@
     }
 
 
+    // Insert Suggested Group under Vendor Ticket field
     function insertSuggestedGroupDisplay(suggestedText) {
-        let currentMode = localStorage.getItem('selectedMode') || 'NOC';
+        //let currentMode = localStorage.getItem('selectedMode') || 'NOC';
 
         // Find the Vendor Ticket and Assignment Group elements
         let vendorTicketElement = document.getElementById('element.incident.u_vendor_ticket');
@@ -345,6 +384,7 @@
     }
 
 
+    // Display Device Count for IGS mode between the Short Description and Description field for visibility
     function updateDeviceCountsDisplayIGSMode(deviceCounts) {
         // Build the innerHTML based on deviceCounts
         let countsHTML = '';
@@ -394,6 +434,7 @@
     }
 
 
+    // Main Function to put everything together
     setTimeout(() => {
 
         // Mode selection dropdown creation and insertion
@@ -412,6 +453,7 @@
         `;
 
         // Load the currently selected mode from localStorage
+        // Adjust where to display based on the mode and whether a match was found
         var selectedMode = localStorage.getItem('selectedMode') || 'NOC'; // Default to 'NOC'
         modeSelector.value = selectedMode;
 
@@ -475,8 +517,6 @@
             }
         }
 
-        // Adjust where to display based on the mode and whether a match was found
-        let currentMode = localStorage.getItem('selectedMode') || 'NOC';
         if (!suggestedGroupInfo.text) {
             // No match found, set to UNKNOWN
             suggestedGroupInfo.text = '<b>UNKNOWN</b>';
