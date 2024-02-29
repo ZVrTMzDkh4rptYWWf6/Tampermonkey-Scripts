@@ -84,7 +84,7 @@
               // Bayshore, No IGS Support
               includesAny: ['BAYSHORE' ],
               priortxt: '',
-              group: 'For Critical Alerts: E-mail and Call Client then Resolve.'
+              group: 'For Critical Alerts: E-mail and Call Client then Resolve.<br /><br />(Assign to <b>Bayshore Home Health Support</b> and save to have SNow send email.<br />After confirming email sent via Notes under ticket details, Resolve.)'
           },
           {
               // EPCOR goes to EPCOR Utilities Inc. Support
