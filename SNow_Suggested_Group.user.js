@@ -272,7 +272,7 @@
         let missingKeys = criticalKeys.filter(({ key }) =>
                                               !lines.some(line => line.includes(key) && line.split(key)[1].trim() !== '')
                                              ).map(({ label }) => label);
-
+        logDebug(`missingKeys.length:`, missingKeys.length);
         if (missingKeys.length > 0) {
             return `<br /><font color="red">Ticket is missing key critical information: <br /><b>${missingKeys.join(', ')}</b><br />Please forward ticket to Pod or Site Manager as a device in the ticket may be onboarding.</font><br /><br />`;
         }
