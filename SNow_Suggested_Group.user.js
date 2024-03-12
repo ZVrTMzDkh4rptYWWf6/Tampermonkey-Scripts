@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         ServiceNow Suggested Group Button
-// @version      1.7616
+// @version      1.7617
 // @description  Create a button with the suggested group text and copy it to the assignment group field when clicked
 // @match        https://lvs1.service-now.com/incident*
 // @downloadURL  https://github.com/ZVrTMzDkh4rptYWWf6/Tampermonkey-Scripts/raw/main/SNow_Suggested_Group.user.js
@@ -140,6 +140,14 @@
               group: 'IGS POD BC 1',
               key_critical_information_warning: false,
               requiresAny: ['Windows Exchange Events', 'Exchange Event']
+          },
+          {
+              // GCGC
+              alertTitle: '<small>GCGC Specific Alert:</small><br />',
+              includes: ['lmcollector: BLACKJACK' ],
+              priortxt: 'Check GCGC NOC runbook before routing. Otherwise<br/>',
+              group: 'IGS POD BC 1',
+              key_critical_information_warning: false,
           },
           {
               // Index Exchange goes to IGS POD TO 1
