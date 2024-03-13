@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         ServiceNow Suggested Group Button
-// @version      1.7617
+// @version      1.7618
 // @description  Create a button with the suggested group text and copy it to the assignment group field when clicked
 // @match        https://lvs1.service-now.com/incident*
 // @downloadURL  https://github.com/ZVrTMzDkh4rptYWWf6/Tampermonkey-Scripts/raw/main/SNow_Suggested_Group.user.js
@@ -127,8 +127,8 @@
               // GCGC Does not subscribe to LVS Database Services
               alertTitle: '<small>GCGC Database Specific Alert:</small><br />',
               includes: ['lmcollector: BLACKJACK' ],
-              priortxt: 'Possible <b><u><font color="red">Database Alert</font></u>: GCGC Does not subscribe to LVS Database services.</b><br />E-mail alert to address listed in Runbook for any "<b>Database related alerts</b>" Otherwise<br/>',
-              group: 'IGS POD BC 1',
+              priortxt: 'Possible <b><u><font color="red">Database Alert</font></u>: GCGC Does not subscribe to LVS Database services.</b><br />E-mail alert to address listed in Runbook for any "<b>Database related alerts</b>"<br/>',
+              group: 'Resolve Ticket as per runbook.',
               key_critical_information_warning: false,
               requiresAny: ['SQL System Jobs', 'SQL Server']
           },
@@ -136,8 +136,8 @@
               // GCGC Does not subscribe to LVS Exchange Services
               alertTitle: '<small>GCGC Exchange Specific Alert:</small><br />',
               includes: ['lmcollector: BLACKJACK' ],
-              priortxt: 'Possible <b><u><font color="red">Exchange Alert</font></u>: GCGC Does not subscribe to LVS Exchange services.</b><br />E-mail alert to address listed in Runbook for any "<b>Exchange related alerts</b>" Otherwise<br/>',
-              group: 'IGS POD BC 1',
+              priortxt: 'Possible <b><u><font color="red">Exchange Alert</font></u>: GCGC Does not subscribe to LVS Exchange services.</b><br />E-mail alert to address listed in Runbook for any "<b>Exchange related alerts</b>"<br/>',
+              group: 'Resolve Ticket as per runbook.',
               key_critical_information_warning: false,
               requiresAny: ['Windows Exchange Events', 'Exchange Event']
           },
@@ -145,7 +145,7 @@
               // GCGC
               alertTitle: '<small>GCGC Specific Alert:</small><br />',
               includes: ['lmcollector: BLACKJACK' ],
-              priortxt: 'Check GCGC NOC runbook before routing. Otherwise<br/>',
+              priortxt: 'Check GCGC NOC runbook for instructions before routing. Otherwise<br/>',
               group: 'IGS POD BC 1',
               key_critical_information_warning: false,
           },
